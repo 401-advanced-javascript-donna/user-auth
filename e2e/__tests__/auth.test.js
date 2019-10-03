@@ -1,4 +1,7 @@
+const request = require('../request');
 const { dropCollection } = require('../db');
+// eslint-disable-next-line no-unused-vars
+const jwt = require('jsonwebtoken');
 const { signupUser } = require('../data-helpers');
 
 describe('Auth API', () => {
@@ -19,6 +22,16 @@ describe('Auth API', () => {
 
   it('signs up a user', () => {
     expect(user.token).toBeDefined();
+  });
+
+  it('cannot sign up with same email', () => {
+    return request
+      .post('/api/auth/signup')
+      .send(testUser)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.error).toBe('Email me@me.com already in use');
+      });
   });
   
 });

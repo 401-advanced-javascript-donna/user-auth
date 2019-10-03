@@ -42,4 +42,5 @@ describe('Kubrick API', () => {
         );
       });
   });
+
 });

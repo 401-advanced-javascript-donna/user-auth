@@ -1,6 +1,4 @@
-const request = require('../request');
 const { dropCollection } = require('../db');
-const jwt = require('jsonwebtoken');
 const { signupUser } = require('../data-helpers');
 
 describe('Auth API', () => {

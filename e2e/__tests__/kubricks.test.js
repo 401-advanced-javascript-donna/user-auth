@@ -43,4 +43,41 @@ describe('Kubrick API', () => {
       });
   });
 
+  function postKubrick() {
+    return request
+      .post('/api/kubricks')
+      .set('Authorization', user.token)
+      .send(kubrick)
+      .expect(200)
+      .then(({ body }) => body);
+  }
+
+  it('gets kubrick film by id', () => {
+    return postKubrick(kubrick)
+      .then(kubrick => {
+        return request
+          .get(`/api/kubricks/${kubrick._id}`)
+          .set('Authorization', user.token)
+          .expect(200);
+      })
+      .then(({ body }) => {
+        expect(body).toMatchInlineSnapshot(
+          {
+            _id: expect.any(String),
+            owner: expect.any(String)
+          },
+
+          `
+          Object {
+            "__v": 0,
+            "_id": Any<String>,
+            "owner": Any<String>,
+            "title": "The Shining",
+            "writers": Array [],
+            "yearRelease": 1980,
+          }
+        `
+        );
+      });
+  });
 });

@@ -120,4 +120,28 @@ describe('Kubrick API', () => {
         );
       });
   });
+
+  it('updates a kubrick film', () => {
+    return postKubrick(kubrick)
+      .then(kubrick => {
+        kubrick.title = 'Shining';
+        return request
+          .put(`/api/kubricks/${kubrick._id}`)
+          .set('Authorization', user.token)
+          .send(kubrick)
+          .expect(200);
+      })
+      .then(({ body }) => {
+        expect(body.title).toBe('Shining');
+      });
+  });
+
+  it('deletes a kubrick film', () => {
+    return postKubrick(kubrick).then(kubrick => {
+      return request
+        .delete(`/api/kubricks/${kubrick._id}`)
+        .set('Authorization', user.token)
+        .expect(200);
+    });
+  });
 });

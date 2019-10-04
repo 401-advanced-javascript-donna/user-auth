@@ -80,4 +80,44 @@ describe('Kubrick API', () => {
         );
       });
   });
+
+  it('gets a list of kubrick films', () => {
+    const firstdata = {
+      title: 'A Clockwork Orange',
+      writers: ['Stanley Kubrick', 'Anthony Burgess'],
+      cinematographer: 'John Alcott',
+      yearRelease: 1971
+    };
+    return Promise.all([
+      postKubrick(firstdata),
+      postKubrick({ title: 'Lolita', yearRelease: 1962 }),
+      postKubrick({ title: 'Spartacus', yearRelease: 1960 })
+    ])
+      .then(() => {
+        return request
+          .get('/api/kubricks')
+          .set('Authorization', user.token)
+          .expect(200);
+      })
+      .then(({ body }) => {
+        expect(body.length).toBe(3);
+        expect(body[0]).toMatchInlineSnapshot(
+          {
+            _id: expect.any(String),
+            owner: expect.any(String)
+          },
+
+          `
+          Object {
+            "__v": 0,
+            "_id": Any<String>,
+            "owner": Any<String>,
+            "title": "The Shining",
+            "writers": Array [],
+            "yearRelease": 1980,
+          }
+        `
+        );
+      });
+  });
 });
